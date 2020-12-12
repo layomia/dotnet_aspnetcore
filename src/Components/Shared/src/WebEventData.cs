@@ -3,7 +3,23 @@
 
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Web;
+using JsonCodeGeneration;
+
+[assembly: JsonSerializable(typeof(Microsoft.AspNetCore.Components.ChangeEventArgs))]
+[assembly: JsonSerializable(typeof(ClipboardEventArgs))]
+[assembly: JsonSerializable(typeof(DragEventArgs))]
+[assembly: JsonSerializable(typeof(ErrorEventArgs))]
+[assembly: JsonSerializable(typeof(FocusEventArgs))]
+[assembly: JsonSerializable(typeof(KeyboardEventArgs))]
+[assembly: JsonSerializable(typeof(MouseEventArgs))]
+[assembly: JsonSerializable(typeof(PointerEventArgs))]
+[assembly: JsonSerializable(typeof(ProgressEventArgs))]
+[assembly: JsonSerializable(typeof(TouchEventArgs))]
+[assembly: JsonSerializable(typeof(WheelEventArgs))]
+[assembly: JsonSerializable(typeof(EventArgs))]
 
 namespace Microsoft.AspNetCore.Components.Web
 {
@@ -60,18 +76,18 @@ namespace Microsoft.AspNetCore.Components.Web
                 return eventArgsType switch
                 {
                     "change" => DeserializeChangeEventArgs(eventArgsJson),
-                    "clipboard" => Deserialize<ClipboardEventArgs>(eventArgsJson),
-                    "drag" => Deserialize<DragEventArgs>(eventArgsJson),
-                    "error" => Deserialize<ErrorEventArgs>(eventArgsJson),
-                    "focus" => Deserialize<FocusEventArgs>(eventArgsJson),
-                    "keyboard" => Deserialize<KeyboardEventArgs>(eventArgsJson),
-                    "mouse" => Deserialize<MouseEventArgs>(eventArgsJson),
-                    "pointer" => Deserialize<PointerEventArgs>(eventArgsJson),
-                    "progress" => Deserialize<ProgressEventArgs>(eventArgsJson),
-                    "touch" => Deserialize<TouchEventArgs>(eventArgsJson),
+                    "clipboard" => JsonSerializer.Deserialize<ClipboardEventArgs>(eventArgsJson, SerializerContext.ClipboardEventArgs),
+                    "drag" => JsonSerializer.Deserialize<DragEventArgs>(eventArgsJson, SerializerContext.DragEventArgs),
+                    "error" => JsonSerializer.Deserialize<ErrorEventArgs>(eventArgsJson, SerializerContext.ErrorEventArgs),
+                    "focus" => JsonSerializer.Deserialize<FocusEventArgs>(eventArgsJson, SerializerContext.FocusEventArgs),
+                    "keyboard" => JsonSerializer.Deserialize<KeyboardEventArgs>(eventArgsJson, SerializerContext.KeyboardEventArgs),
+                    "mouse" => JsonSerializer.Deserialize<MouseEventArgs>(eventArgsJson, SerializerContext.MouseEventArgs),
+                    "pointer" => JsonSerializer.Deserialize<PointerEventArgs>(eventArgsJson, SerializerContext.PointerEventArgs),
+                    "progress" => JsonSerializer.Deserialize<ProgressEventArgs>(eventArgsJson, SerializerContext.ProgressEventArgs),
+                    "touch" => JsonSerializer.Deserialize<TouchEventArgs>(eventArgsJson, SerializerContext.TouchEventArgs),
                     "unknown" => EventArgs.Empty,
-                    "wheel" => Deserialize<WheelEventArgs>(eventArgsJson),
-                    "toggle" => Deserialize<EventArgs>(eventArgsJson),
+                    "wheel" => JsonSerializer.Deserialize<WheelEventArgs>(eventArgsJson, SerializerContext.WheelEventArgs),
+                    "toggle" => JsonSerializer.Deserialize<EventArgs>(eventArgsJson, SerializerContext.EventArgs),
                     _ => throw new InvalidOperationException($"Unsupported event type '{eventArgsType}'. EventId: '{eventHandlerId}'."),
                 };
             }
@@ -81,7 +97,9 @@ namespace Microsoft.AspNetCore.Components.Web
             }
         }
 
-        private static T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonSerializerOptionsProvider.Options);
+        private static JsonContext SerializerContext = new(JsonSerializerOptionsProvider.Options);
+
+        private static T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, jsonSerializerContext: null);
 
         private static EventFieldInfo InterpretEventFieldInfo(EventFieldInfo fieldInfo)
         {

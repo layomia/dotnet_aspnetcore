@@ -43,6 +43,9 @@
     <ExternalAspNetCoreAppReference Include="System.IO.Pipelines"                                          Version="$(SystemIOPipelinesPackageVersion)" />
     <ExternalAspNetCoreAppReference Include="System.Security.Cryptography.Xml"                             Version="$(SystemSecurityCryptographyXmlPackageVersion)" />
 
+    <!-- JSON source generator and updated System.Text.Json.dll -->
+    <ExternalAspNetCoreAppReference Include="System.Text.Json" Version="6.0.0-JsonCoGen.1.20574.2" />
+
     <!--
       Transitive dependencies of other assemblies in the shared framework. These are listed separately and should not be included directly
       when setting `<Reference>`. These are listed for the purpose of tests and servicing builds only.

@@ -53,7 +53,7 @@ namespace Microsoft.JSInterop.Infrastructure
                 return null;
             }
 
-            return JsonSerializer.Serialize(syncResult, jsRuntime.JsonSerializerOptions);
+            return JsonSerializer.Serialize(syncResult, jsRUntime.SerializerContext);
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Microsoft.JSInterop.Infrastructure
                     throw new InvalidOperationException($"In call to '{methodIdentifier}', parameter of type '{parameterType.Name}' at index {(index + 1)} must be declared as type 'DotNetObjectRef<{parameterType.Name}>' to receive the incoming value.");
                 }
 
-                suppliedArgs[index] = JsonSerializer.Deserialize(ref reader, parameterType, jsRuntime.JsonSerializerOptions);
+                suppliedArgs[index] = JsonSerializer.Deserialize(ref reader, parameterType, jsRuntime.SerializerContext);
                 index++;
             }
 

@@ -19,8 +19,8 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures
 
             // We need to serialize and Base64 encode parameters separately since they can contain arbitrary data that might
             // cause the HTML comment to be invalid (like if you serialize a string that contains two consecutive dashes "--").
-            var serializedDefinitions = Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(definitions, WebAssemblyComponentSerializationSettings.JsonSerializationOptions));
-            var serializedValues = Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(values, WebAssemblyComponentSerializationSettings.JsonSerializationOptions));
+            var serializedDefinitions = Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(definitions, WebAssemblyComponentSerializationSettings.SerializerContext));
+            var serializedValues = Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(values, WebAssemblyComponentSerializationSettings.SerializerContext));
 
             return prerendered ? WebAssemblyComponentMarker.Prerendered(assembly, typeFullName, serializedDefinitions, serializedValues) :
                 WebAssemblyComponentMarker.NonPrerendered(assembly, typeFullName, serializedDefinitions, serializedValues);
@@ -30,7 +30,7 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures
         {
             var serializedStartRecord = JsonSerializer.Serialize(
                 record,
-                WebAssemblyComponentSerializationSettings.JsonSerializationOptions);
+                WebAssemblyComponentSerializationSettings.SerializerContext);
 
             if (record.PrerenderId != null)
             {
@@ -60,7 +60,7 @@ namespace Microsoft.AspNetCore.Mvc.ViewFeatures
         {
             var serializedStartRecord = JsonSerializer.Serialize(
                 record.GetEndRecord(),
-                WebAssemblyComponentSerializationSettings.JsonSerializationOptions);
+                WebAssemblyComponentSerializationSettings.SerializerContext);
 
             return PrerenderEnd(serializedStartRecord);
 

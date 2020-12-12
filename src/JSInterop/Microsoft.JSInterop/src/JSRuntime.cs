@@ -30,24 +30,24 @@ namespace Microsoft.JSInterop
         /// </summary>
         protected JSRuntime()
         {
-            JsonSerializerOptions = new JsonSerializerOptions
-            {
-                MaxDepth = 32,
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true,
-                Converters =
-                {
-                    new DotNetObjectReferenceJsonConverterFactory(this),
-                    new JSObjectReferenceJsonConverter<IJSObjectReference, JSObjectReference>(
-                        id => new JSObjectReference(this, id)),
-                }
-            };
+            JsonSerializerOptions options = JsonSerializerOptions.CreateForCodeGen(JsonSerializerDefaults.General);
+            options.MaxDepth = 32;
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.PropertyNameCaseInsensitive = true;
+            options.Converters.Add(new DotNetObjectReferenceJsonConverterFactory(this));
+            options.Converters.Add(new JSObjectReferenceJsonConverter<IJSObjectReference, JSObjectReference>(
+                id => new JSObjectReference(this, id)));
+            JsonSerializerOptions = options;
+
+            SerializerContext = new JsonContext(JsonSerializerOptions);
         }
 
         /// <summary>
         /// Gets the <see cref="System.Text.Json.JsonSerializerOptions"/> used to serialize and deserialize interop payloads.
         /// </summary>
         protected internal JsonSerializerOptions JsonSerializerOptions { get; }
+
+        protected internal JsonContext SerializerContext { get; }
 
         /// <summary>
         /// Gets or sets the default timeout for asynchronous JavaScript calls.
@@ -123,7 +123,7 @@ namespace Microsoft.JSInterop
                 }
 
                 var argsJson = args?.Any() == true ?
-                    JsonSerializer.Serialize(args, JsonSerializerOptions) :
+                    JsonSerializer.Serialize(args, jsonSerializerContext: null!) :
                     null;
                 var resultType = JSCallResultTypeHelper.FromGeneric<TValue>();
 
@@ -192,7 +192,7 @@ namespace Microsoft.JSInterop
                 {
                     var resultType = TaskGenericsUtil.GetTaskCompletionSourceResultType(tcs);
 
-                    var result = JsonSerializer.Deserialize(ref jsonReader, resultType, JsonSerializerOptions);
+                    var result = JsonSerializer.Deserialize(ref jsonReader, resultType, SerializerContext);
                     TaskGenericsUtil.SetTaskCompletionSourceResult(tcs, result);
                 }
                 else

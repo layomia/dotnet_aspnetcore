@@ -3,17 +3,22 @@
 
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using JsonCodeGeneration;
 
 namespace Microsoft.AspNetCore.Components
 {
     internal static class WebAssemblyComponentSerializationSettings
     {
-        public static readonly JsonSerializerOptions JsonSerializationOptions =
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true,
-                IgnoreNullValues = true
-            };
+        public static readonly JsonContext SerializerContext = new(GetOptions());
+
+        private static JsonSerializerOptions GetOptions()
+        {
+            JsonSerializerOptions options = JsonSerializerOptions.CreateForCodeGen(JsonSerializerDefaults.General);
+            options.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+            options.PropertyNameCaseInsensitive = true;
+            options.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+            return options;
+        }
     }
 }
