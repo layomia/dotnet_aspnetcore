@@ -14,7 +14,7 @@ namespace Microsoft.JSInterop
         {
             var resultJson = InvokeJS(
                 identifier,
-                JsonSerializer.Serialize(args, JsonSerializerOptions),
+                JsonSerializer.Serialize(args, JsonSerializerContext),
                 JSCallResultTypeHelper.FromGeneric<TValue>(),
                 targetInstanceId);
 
@@ -26,7 +26,7 @@ namespace Microsoft.JSInterop
                 return default!;
             }
 
-            return JsonSerializer.Deserialize<TValue>(resultJson, JsonSerializerOptions)!;
+            return JsonSerializer.Deserialize<TValue>(resultJson, JsonSerializerContext)!;
         }
 
         /// <summary>

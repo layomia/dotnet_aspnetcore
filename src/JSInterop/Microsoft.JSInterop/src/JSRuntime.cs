@@ -6,9 +6,11 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.JSInterop.Infrastructure;
+using Microsoft.JSInterop.JsonSourceGeneration;
 
 namespace Microsoft.JSInterop
 {
@@ -29,7 +31,7 @@ namespace Microsoft.JSInterop
         /// </summary>
         protected JSRuntime()
         {
-            JsonSerializerOptions = new JsonSerializerOptions
+            JsonSerializerOptions options = new JsonSerializerOptions
             {
                 MaxDepth = 32,
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -40,12 +42,14 @@ namespace Microsoft.JSInterop
                     new JSObjectReferenceJsonConverter(this),
                 }
             };
+
+            JsonSerializerContext = new JsonContext(options);
         }
 
         /// <summary>
-        /// Gets the <see cref="System.Text.Json.JsonSerializerOptions"/> used to serialize and deserialize interop payloads.
+        /// Gets the <see cref="System.Text.Json.Serialization.JsonSerializerContext"/> used to serialize and deserialize interop payloads.
         /// </summary>
-        protected internal JsonSerializerOptions JsonSerializerOptions { get; }
+        protected internal JsonSerializerContext JsonSerializerContext { get; }
 
         /// <summary>
         /// Gets or sets the default timeout for asynchronous JavaScript calls.
@@ -121,7 +125,7 @@ namespace Microsoft.JSInterop
                 }
 
                 var argsJson = args?.Any() == true ?
-                    JsonSerializer.Serialize(args, JsonSerializerOptions) :
+                    JsonSerializer.Serialize(args, JsonSerializerContext) :
                     null;
                 var resultType = JSCallResultTypeHelper.FromGeneric<TValue>();
 
@@ -190,7 +194,7 @@ namespace Microsoft.JSInterop
                 {
                     var resultType = TaskGenericsUtil.GetTaskCompletionSourceResultType(tcs);
 
-                    var result = JsonSerializer.Deserialize(ref jsonReader, resultType, JsonSerializerOptions);
+                    var result = JsonSerializer.Deserialize(ref jsonReader, resultType, JsonSerializerContext);
                     TaskGenericsUtil.SetTaskCompletionSourceResult(tcs, result);
                 }
                 else

@@ -5,8 +5,14 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.WebAssembly.JsonSourceGeneration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+
+[assembly: JsonSerializable(typeof(ComponentParameter[]))]
+[assembly: JsonSerializable(typeof(IList<object>))]
 
 namespace Microsoft.AspNetCore.Components
 {
@@ -61,7 +67,7 @@ namespace Microsoft.AspNetCore.Components
                         var parameterValue = JsonSerializer.Deserialize(
                             value.GetRawText(),
                             parameterType,
-                            WebAssemblyComponentSerializationSettings.JsonSerializationOptions);
+                            JsonSerializerContext);
 
                         parametersDictionary[definition.Name] = parameterValue;
                     }
@@ -77,12 +83,14 @@ namespace Microsoft.AspNetCore.Components
 
         public ComponentParameter[] GetParameterDefinitions(string parametersDefinitions)
         {
-            return JsonSerializer.Deserialize<ComponentParameter[]>(parametersDefinitions, WebAssemblyComponentSerializationSettings.JsonSerializationOptions)!;
+            return JsonSerializer.Deserialize<ComponentParameter[]>(parametersDefinitions, JsonSerializerContext)!;
         }
 
         public IList<object> GetParameterValues(string parameterValues)
         {
-            return JsonSerializer.Deserialize<IList<object>>(parameterValues, WebAssemblyComponentSerializationSettings.JsonSerializationOptions)!;
+            return JsonSerializer.Deserialize<IList<object>>(parameterValues, JsonSerializerContext)!;
         }
+
+        public static readonly JsonContext JsonSerializerContext = new(WebAssemblyComponentSerializationSettings.JsonSerializerOptions);
     }
 }

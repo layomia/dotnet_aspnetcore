@@ -7,6 +7,8 @@
     <NoWarn>$(NoWarn);BL0006</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Nullable>enable</Nullable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <langversion>preview</langversion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -51,4 +53,9 @@
     <Content Include="$(BlazorWebAssemblyJSFile)" Pack="true" PackagePath="build\$(DefaultNetCoreTargetFramework)\" LinkBase="build\$(DefaultNetCoreTargetFramework)\" />
     <Content Include="build\$(DefaultNetCoreTargetFramework)\*.props" Pack="true" PackagePath="build\$(DefaultNetCoreTargetFramework)\" />
   </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.2.21102.3" />
+  </ItemGroup>
+
 </Project>

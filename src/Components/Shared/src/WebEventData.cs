@@ -3,7 +3,24 @@
 
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Components.RenderTree;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.WebAssembly.JsonSourceGeneration;
+
+[assembly: JsonSerializable(typeof(Microsoft.AspNetCore.Components.ChangeEventArgs))]
+[assembly: JsonSerializable(typeof(ClipboardEventArgs))]
+[assembly: JsonSerializable(typeof(DragEventArgs))]
+[assembly: JsonSerializable(typeof(ErrorEventArgs))]
+[assembly: JsonSerializable(typeof(FocusEventArgs))]
+[assembly: JsonSerializable(typeof(KeyboardEventArgs))]
+[assembly: JsonSerializable(typeof(MouseEventArgs))]
+[assembly: JsonSerializable(typeof(PointerEventArgs))]
+[assembly: JsonSerializable(typeof(ProgressEventArgs))]
+[assembly: JsonSerializable(typeof(TouchEventArgs))]
+[assembly: JsonSerializable(typeof(WheelEventArgs))]
+[assembly: JsonSerializable(typeof(EventArgs))]
+[assembly: JsonSerializable(typeof(EventArgs))]
 
 namespace Microsoft.AspNetCore.Components.Web
 {
@@ -82,7 +99,9 @@ namespace Microsoft.AspNetCore.Components.Web
 
         }
 
-        static T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonSerializerOptionsProvider.Options)!;
+        private static T Deserialize<T>(string json) => JsonSerializer.Deserialize<T>(json, JsonSerializerContext)!;
+
+        public static readonly JsonContext JsonSerializerContext = new JsonContext(JsonSerializerOptionsProvider.Options);
 
         private static EventFieldInfo? InterpretEventFieldInfo(EventFieldInfo? fieldInfo)
         {

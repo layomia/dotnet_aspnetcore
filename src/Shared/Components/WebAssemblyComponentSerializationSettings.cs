@@ -9,12 +9,11 @@ namespace Microsoft.AspNetCore.Components
 {
     internal static class WebAssemblyComponentSerializationSettings
     {
-        public static readonly JsonSerializerOptions JsonSerializationOptions =
-            new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                PropertyNameCaseInsensitive = true,
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
-            };
+        public static JsonSerializerOptions JsonSerializerOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
     }
 }

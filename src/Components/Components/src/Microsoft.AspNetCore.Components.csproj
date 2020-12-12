@@ -6,6 +6,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IsAspNetCoreApp>true</IsAspNetCoreApp>
     <Nullable>enable</Nullable>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <langversion>preview</langversion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -56,6 +58,10 @@
     <NuspecProperty Include="DefaultNetCoreTargetFramework=$(DefaultNetCoreTargetFramework)" />
     <NuspecProperty Include="OutputPath=$(OutputPath)" />
     <NuspecProperty Include="PackageThirdPartyNoticesFile=$(PackageThirdPartyNoticesFile)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0-JsonCoGen.1.20574.2" />
   </ItemGroup>
 
 </Project>

@@ -3,8 +3,14 @@
 
 using System;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.JSInterop.Infrastructure;
 using WebAssembly.JSInterop;
+using Microsoft.JSInterop.WebAssembly.JsonSourceGeneration;
+
+[assembly: JsonSerializable(typeof(object[]))]
+[assembly: JsonSerializable(typeof(DotNetInvocationInfo), CanBeDynamic = true)]
+[assembly: JsonSerializable(typeof(DotNetInvocationResult), CanBeDynamic = true)]
 
 namespace Microsoft.JSInterop.WebAssembly
 {
@@ -19,7 +25,7 @@ namespace Microsoft.JSInterop.WebAssembly
         /// </summary>
         protected WebAssemblyJSRuntime()
         {
-            JsonSerializerOptions.Converters.Insert(0, new WebAssemblyJSObjectReferenceJsonConverter(this));
+            JsonSerializerContext.GetOptions()!.Converters.Insert(0, new WebAssemblyJSObjectReferenceJsonConverter(this));
         }
 
         /// <inheritdoc />
@@ -66,7 +72,7 @@ namespace Microsoft.JSInterop.WebAssembly
 
             // We pass 0 as the async handle because we don't want the JS-side code to
             // send back any notification (we're just providing a result for an existing async call)
-            var args = JsonSerializer.Serialize(new[] { callInfo.CallId, dispatchResult.Success, resultOrError }, JsonSerializerOptions);
+            var args = JsonSerializer.Serialize(new[] { callInfo.CallId, dispatchResult.Success, resultOrError }, ((JsonContext)JsonSerializerContext).ObjectArray);
             BeginInvokeJS(0, "DotNet.jsCallDispatcher.endInvokeDotNetFromJS", args, JSCallResultType.Default, 0);
         }
 
