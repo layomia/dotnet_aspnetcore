@@ -3,12 +3,13 @@
 
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using JsonCodeGeneration;
 
 namespace Microsoft.AspNetCore.Components
 {
     internal static class JsonSerializerOptionsProvider
     {
-        public static readonly JsonSerializerOptions Options = GetOptions();
+        public static readonly JsonContext SerializerContext = new JsonContext(GetOptions());
 
         public static JsonSerializerOptions GetOptions()
         {

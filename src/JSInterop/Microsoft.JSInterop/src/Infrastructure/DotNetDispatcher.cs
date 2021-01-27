@@ -53,7 +53,7 @@ namespace Microsoft.JSInterop.Infrastructure
                 return null;
             }
 
-            return JsonSerializer.Serialize(syncResult, jsRUntime.SerializerContext);
+            return JsonSerializer.Serialize(syncResult, jsRuntime.SerializerContext);
         }
 
         /// <summary>

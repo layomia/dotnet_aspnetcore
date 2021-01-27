@@ -68,7 +68,7 @@ namespace Microsoft.AspNetCore.Components.Server.Circuits
         {
             _clientProxy.SendAsync(
                 "JS.EndInvokeDotNet",
-                JsonSerializer.Serialize(new[] { callId, success, resultOrError }, JsonSerializerContext.StringArray));
+                JsonSerializer.Serialize(new[] { callId, success, resultOrError }, SerializerContext.StringArray));
         }
 
         protected override void BeginInvokeJS(long asyncHandle, string identifier, string argsJson, JSCallResultType resultType, long targetInstanceId)

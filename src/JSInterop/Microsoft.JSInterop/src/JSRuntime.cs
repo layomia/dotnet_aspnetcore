@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.JSInterop.Implementation;
 using Microsoft.JSInterop.Infrastructure;
+using JsonCodeGeneration;
 
 namespace Microsoft.JSInterop
 {
@@ -47,7 +48,7 @@ namespace Microsoft.JSInterop
         /// </summary>
         protected internal JsonSerializerOptions JsonSerializerOptions { get; }
 
-        protected internal JsonContext SerializerContext { get; }
+        internal JsonContext SerializerContext { get; }
 
         /// <summary>
         /// Gets or sets the default timeout for asynchronous JavaScript calls.
@@ -123,7 +124,7 @@ namespace Microsoft.JSInterop
                 }
 
                 var argsJson = args?.Any() == true ?
-                    JsonSerializer.Serialize(args, jsonSerializerContext: null!) :
+                    JsonSerializer.Serialize(args, SerializerContext) :
                     null;
                 var resultType = JSCallResultTypeHelper.FromGeneric<TValue>();
 
