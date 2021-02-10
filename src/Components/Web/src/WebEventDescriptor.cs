@@ -4,6 +4,8 @@
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Components.RenderTree;
 
+// The generated metadata here needs to be passed to DotNetDispatcher.ParseArguments
+// for dotnet new blazorwasm to work well with JSON source generation.
 [assembly: JsonSerializable(typeof(WebEventDescriptor))]
 
 namespace Microsoft.AspNetCore.Components.RenderTree

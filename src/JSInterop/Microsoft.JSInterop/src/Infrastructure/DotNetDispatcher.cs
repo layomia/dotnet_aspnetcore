@@ -201,9 +201,8 @@ namespace Microsoft.JSInterop.Infrastructure
                     throw new InvalidOperationException($"In call to '{methodIdentifier}', parameter of type '{parameterType.Name}' at index {(index + 1)} must be declared as type 'DotNetObjectRef<{parameterType.Name}>' to receive the incoming value.");
                 }
 
-                // AOT/trim-size unfriendly call to JsonSerializer here.
-                // [assembly: JsonSerializable(typeof(WebEventDescriptor, bool, string, int))] needs to be placed in Microsoft.JSInterop.csproj
-                // for deserialization to be successful as this code is written.
+                // AOT/trim-size unfriendly call to JsonSerializer here. Metadata for typeof(WebEventDescriptor, bool, string, int))]
+                // needs to be passed to Microsoft.JSInterop.csproj for deserialization to be successful as this code is written.
                 suppliedArgs[index] = JsonSerializer.Deserialize(ref reader, parameterType, jsRuntime.JsonSerializerContext);
                 index++;
             }

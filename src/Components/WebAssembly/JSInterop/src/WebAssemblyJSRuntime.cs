@@ -7,8 +7,6 @@ using System.Text.Json.Serialization;
 using Microsoft.JSInterop.Infrastructure;
 using WebAssembly.JSInterop;
 
-// [assembly: JsonSerializable(typeof(object[]))]
-
 namespace Microsoft.JSInterop.WebAssembly
 {
     /// <summary>
