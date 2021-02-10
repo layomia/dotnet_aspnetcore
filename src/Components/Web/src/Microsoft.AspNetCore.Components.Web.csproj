@@ -8,6 +8,8 @@
     <RootNamespace>Microsoft.AspNetCore.Components</RootNamespace>
     <Nullable>enable</Nullable>
     <NoWarn>$(NoWarn.Replace('1591', ''))</NoWarn>
+    <EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+    <langversion>preview</langversion>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,6 +18,10 @@
     <Reference Include="Microsoft.Extensions.DependencyInjection" />
     <Reference Include="Microsoft.JSInterop" />
     <Reference Include="System.IO.Pipelines" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0-preview.2.21102.3" />
   </ItemGroup>
 
 </Project>

@@ -53,7 +53,7 @@ namespace Microsoft.JSInterop.Infrastructure
                 return null;
             }
 
-            return JsonSerializer.Serialize(syncResult, jsRuntime.JsonSerializerOptions);
+            return JsonSerializer.Serialize(syncResult, jsRuntime.JsonSerializerContext);
         }
 
         /// <summary>
@@ -192,6 +192,7 @@ namespace Microsoft.JSInterop.Infrastructure
             var suppliedArgs = new object?[parameterTypes.Length];
 
             var index = 0;
+
             while (index < parameterTypes.Length && reader.Read() && reader.TokenType != JsonTokenType.EndArray)
             {
                 var parameterType = parameterTypes[index];
@@ -200,7 +201,10 @@ namespace Microsoft.JSInterop.Infrastructure
                     throw new InvalidOperationException($"In call to '{methodIdentifier}', parameter of type '{parameterType.Name}' at index {(index + 1)} must be declared as type 'DotNetObjectRef<{parameterType.Name}>' to receive the incoming value.");
                 }
 
-                suppliedArgs[index] = JsonSerializer.Deserialize(ref reader, parameterType, jsRuntime.JsonSerializerOptions);
+                // AOT/trim-size unfriendly call to JsonSerializer here.
+                // [assembly: JsonSerializable(typeof(WebEventDescriptor, bool, string, int))] needs to be placed in Microsoft.JSInterop.csproj
+                // for deserialization to be successful as this code is written.
+                suppliedArgs[index] = JsonSerializer.Deserialize(ref reader, parameterType, jsRuntime.JsonSerializerContext);
                 index++;
             }
 

@@ -3,8 +3,14 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.JSInterop.Implementation;
 using Microsoft.JSInterop.Infrastructure;
+
+[assembly: JsonSerializable(typeof(object[]))]
+[assembly: JsonSerializable(typeof(string), CanBeDynamic = true)]
+[assembly: JsonSerializable(typeof(int), CanBeDynamic = true)]
+[assembly: JsonSerializable(typeof(bool), CanBeDynamic = true)]
 
 namespace Microsoft.JSInterop
 {
@@ -25,9 +31,11 @@ namespace Microsoft.JSInterop
 
         internal TValue Invoke<TValue>(string identifier, long targetInstanceId, params object?[]? args)
         {
+            var options = JsonSerializerContext.GetOptions();
+
             var resultJson = InvokeJS(
                 identifier,
-                JsonSerializer.Serialize(args, JsonSerializerOptions),
+                JsonSerializer.Serialize(args, JsonSerializerContext),
                 JSCallResultTypeHelper.FromGeneric<TValue>(),
                 targetInstanceId);
 
@@ -39,7 +47,7 @@ namespace Microsoft.JSInterop
                 return default!;
             }
 
-            return JsonSerializer.Deserialize<TValue>(resultJson, JsonSerializerOptions)!;
+            return JsonSerializer.Deserialize<TValue>(resultJson, JsonSerializerContext)!;
         }
 
         /// <summary>

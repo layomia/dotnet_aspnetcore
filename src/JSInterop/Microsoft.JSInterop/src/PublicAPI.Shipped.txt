@@ -70,6 +70,7 @@ Microsoft.JSInterop.JSRuntime.InvokeAsync<TValue>(string! identifier, System.Thr
 Microsoft.JSInterop.JSRuntime.InvokeAsync<TValue>(string! identifier, object?[]? args) -> System.Threading.Tasks.ValueTask<TValue>
 Microsoft.JSInterop.JSRuntime.JSRuntime() -> void
 Microsoft.JSInterop.JSRuntime.JsonSerializerOptions.get -> System.Text.Json.JsonSerializerOptions!
+Microsoft.JSInterop.JSRuntime.JsonSerializerContext.get -> System.Text.Json.Serialization.JsonSerializerContext!
 Microsoft.JSInterop.JSRuntimeExtensions
 abstract Microsoft.JSInterop.JSInProcessRuntime.InvokeJS(string! identifier, string? argsJson, Microsoft.JSInterop.JSCallResultType resultType, long targetInstanceId) -> string?
 abstract Microsoft.JSInterop.JSRuntime.BeginInvokeJS(long taskId, string! identifier, string? argsJson, Microsoft.JSInterop.JSCallResultType resultType, long targetInstanceId) -> void
